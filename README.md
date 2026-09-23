@@ -108,8 +108,8 @@ SpotOn/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Mithun-rs/SpotOn.git
-cd SpotOn
+git clone https://github.com/kavin-10cyber/Spot-On.git
+cd Spot-On
 ```
 
 ---
