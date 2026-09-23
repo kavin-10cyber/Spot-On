@@ -45,7 +45,7 @@ const BookingSuccess = ({ parking, slotId, onDone, onViewQR, onNavigateToSlot })
           <View style={styles.logoIcon}>
             <Text style={styles.logoP}>P</Text>
           </View>
-          <Text style={styles.logoText}>ParkNow</Text>
+          <Text style={styles.logoText}>SpotOn</Text>
         </View>
         <View style={styles.avatar}>
           <FeatherIcon name="user" size={16} color="#0052cc" />

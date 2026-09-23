@@ -1,7 +1,7 @@
 import { supabase } from '../config/supabase';
 
 /**
- * ParkNow Realtime Service
+ * SpotOn Realtime Service
  * Manages all Supabase Realtime channel subscriptions safely
  */
 export const realtimeService = {

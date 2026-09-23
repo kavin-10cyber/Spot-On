@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Navbar from '../components/navbar';
+import Navbar from '../Components/navbar';
 import { styles } from './VerifiedEntryStyles';
 
 const VerifiedEntry = ({
@@ -43,7 +43,7 @@ const VerifiedEntry = ({
               source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120' }}
               style={styles.verifiedAvatar}
             /> */}
-            <Text style={styles.verifiedBrandTitle}>ParkNow</Text>
+            <Text style={styles.verifiedBrandTitle}>SpotOn</Text>
           </View>
           <TouchableOpacity style={styles.verifiedBellButton} onPress={() => Alert.alert('Notifications', 'No new notifications.')}>
             <Feather name="bell" size={20} color="#1E293B" />

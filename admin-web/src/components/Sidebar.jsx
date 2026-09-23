@@ -25,7 +25,7 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    localStorage.removeItem('parknow_admin_session');
+    localStorage.removeItem('spoton_admin_session');
     await supabase.auth.signOut();
     window.location.href = '/login';
   };
@@ -38,7 +38,7 @@ export default function Sidebar() {
             <Car size={22} color="#FFFFFF" />
           </div>
           <div>
-            <div className="sidebar-logo-text">ParkNow</div>
+            <div className="sidebar-logo-text">SpotOn</div>
             <div className="sidebar-logo-sub">Admin Console</div>
           </div>
         </div>

@@ -14,7 +14,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Navbar from '../components/navbar';
+import Navbar from '../Components/navbar';
 import { styles } from './dashboardstyles';
 import { parkingService } from '../../../services/parkingService';
 import { realtimeService } from '../../../services/realtimeService';
@@ -212,7 +212,7 @@ const Dashboard = ({
             style={styles.avatar}
           />
           <View style={styles.userTextContainer}>
-            <Text style={styles.userName}>Alex Wright</Text>
+            <Text style={styles.userName}>Vikram Patel</Text>
             <View style={styles.locationRow}>
               <Ionicons name="location-sharp" size={11} color="#64748B" style={styles.locationIcon} />
               <Text style={styles.locationText}>BIT College Campus Parking</Text>

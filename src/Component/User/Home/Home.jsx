@@ -110,43 +110,43 @@ const Home = ({ onBack, onSearch, onParkingSelect, onReserve }) => {
 
   useEffect(() => {
     async function initGPSAndLocations() {
-      // 1. Fetch physical GPS location
-      const loc = await locationService.getCurrentUserLocation();
-      if (loc && loc.latitude && loc.longitude) {
-        setUserLocation(loc);
+      // Fetch physical GPS location and Supabase parking locations in parallel
+      const [locResult, spotsResult] = await Promise.allSettled([
+        locationService.getCurrentUserLocation(),
+        parkingService.getParkingLocations(),
+      ]);
+
+      let currentLoc = { latitude: SATHY_DEFAULT_LAT, longitude: SATHY_DEFAULT_LNG };
+      if (locResult.status === 'fulfilled' && locResult.value?.latitude) {
+        currentLoc = locResult.value;
+        setUserLocation(currentLoc);
       }
 
-      // 2. Fetch Supabase Parking Locations
-      try {
-        const res = await parkingService.getParkingLocations();
-        if (res.success && res.data && res.data.length > 0) {
-          const uLat = loc?.latitude || SATHY_DEFAULT_LAT;
-          const uLng = loc?.longitude || SATHY_DEFAULT_LNG;
+      if (spotsResult.status === 'fulfilled' && spotsResult.value?.success && spotsResult.value?.data?.length > 0) {
+        const uLat = currentLoc.latitude;
+        const uLng = currentLoc.longitude;
 
-          const dbSpots = res.data.map((locationItem, i) => {
-            const spotLat = locationItem.latitude ? Number(locationItem.latitude) : uLat + (i + 1) * 0.003;
-            const spotLng = locationItem.longitude ? Number(locationItem.longitude) : uLng + (i + 1) * 0.003;
-            const dist = locationService.calculateDistance(uLat, uLng, spotLat, spotLng);
+        const dbSpots = spotsResult.value.data.map((locationItem, i) => {
+          const spotLat = locationItem.latitude ? Number(locationItem.latitude) : uLat + (i + 1) * 0.003;
+          const spotLng = locationItem.longitude ? Number(locationItem.longitude) : uLng + (i + 1) * 0.003;
+          const dist = locationService.calculateDistance(uLat, uLng, spotLat, spotLng);
 
-            return {
-              id: String(locationItem.location_id),
-              name: locationItem.name,
-              rating: 4.8,
-              distance: `${dist} km away`,
-              time: `${Math.round(dist * 3 + 2)} mins`,
-              availableSlots: locationItem.availableSlots ?? locationItem.total_capacity ?? 10,
-              rate: 30,
-              lat: spotLat,
-              lng: spotLng,
-              price: '₹30/hr',
-            };
-          });
+          return {
+            id: String(locationItem.location_id),
+            name: locationItem.name,
+            rating: 4.8,
+            distance: `${dist} km away`,
+            time: `${Math.round(dist * 3 + 2)} mins`,
+            availableSlots: locationItem.availableSlots ?? locationItem.total_capacity ?? 10,
+            rate: 30,
+            lat: spotLat,
+            lng: spotLng,
+            price: '₹30/hr',
+          };
+        });
 
-          // Merge DB spots with default Sathyamangalam BIT spots
-          setParkingSpots([...PARKING_SPOTS, ...dbSpots]);
-        }
-      } catch (err) {
-        console.warn('Error fetching Supabase parking locations:', err);
+        // Merge DB spots with default Sathyamangalam BIT spots
+        setParkingSpots([...PARKING_SPOTS, ...dbSpots]);
       }
     }
 

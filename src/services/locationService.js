@@ -11,7 +11,7 @@ export const locationService = {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
             title: 'Location Permission Needed',
-            message: 'ParkNow requires location access to find nearby parking spots and provide turn-by-turn navigation.',
+            message: 'SpotOn requires location access to find nearby parking spots and provide turn-by-turn navigation.',
             buttonNeutral: 'Ask Me Later',
             buttonNegative: 'Cancel',
             buttonPositive: 'Allow Location Access',
@@ -32,24 +32,34 @@ export const locationService = {
   getCurrentUserLocation() {
     return new Promise((resolve) => {
       try {
-        const hasGeo = typeof navigator !== 'undefined' && navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function';
+        const hasGeo =
+          typeof navigator !== 'undefined' &&
+          navigator &&
+          navigator.geolocation &&
+          typeof navigator.geolocation.getCurrentPosition === 'function';
+
         if (hasGeo) {
+          // 1.5s safety timeout to prevent app freeze when GPS satellite lock is slow
+          const timer = setTimeout(() => {
+            resolve({ latitude: 11.4967, longitude: 77.2764, isFallback: true });
+          }, 1500);
+
           navigator.geolocation.getCurrentPosition(
             (position) => {
+              clearTimeout(timer);
               const { latitude, longitude, accuracy } = position.coords;
               resolve({ latitude, longitude, accuracy });
             },
             (error) => {
-              console.warn('getCurrentPosition error:', error.message);
+              clearTimeout(timer);
               resolve({ latitude: 11.4967, longitude: 77.2764, isFallback: true });
             },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            { enableHighAccuracy: false, timeout: 1500, maximumAge: 60000 }
           );
         } else {
           resolve({ latitude: 11.4967, longitude: 77.2764, isFallback: true });
         }
       } catch (e) {
-        console.warn('getCurrentUserLocation exception:', e);
         resolve({ latitude: 11.4967, longitude: 77.2764, isFallback: true });
       }
     });

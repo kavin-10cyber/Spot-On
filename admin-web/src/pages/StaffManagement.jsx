@@ -44,7 +44,7 @@ export default function StaffManagement() {
     setSaving(true);
     // Create auth user
     const { data: authData, error: authErr } = await supabase.auth.admin?.createUser?.({
-      email: newStaff.email, password: 'ParkNow@123', email_confirm: true
+      email: newStaff.email, password: 'SpotOn@123', email_confirm: true
     });
     // Insert into users table directly
     const { error } = await supabase.from('users').insert({
@@ -184,7 +184,7 @@ export default function StaffManagement() {
               </div>
               <div className="form-group">
                 <label className="form-label">Email Address *</label>
-                <input className="form-input" type="email" placeholder="staff@parknow.com" value={newStaff.email} onChange={e => setNewStaff(p => ({ ...p, email: e.target.value }))} />
+                <input className="form-input" type="email" placeholder="staff@spoton.in" value={newStaff.email} onChange={e => setNewStaff(p => ({ ...p, email: e.target.value }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">Phone Number</label>

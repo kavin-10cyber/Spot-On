@@ -20,7 +20,7 @@ import { realtimeService } from '../../../services/realtimeService';
 const DashBoard = ({ setActiveTab }) => {
   const [notifications, setNotifications] = useState([
     { id: '1', title: 'System Alert', message: 'Backup completed successfully.', time: '5m ago' },
-    { id: '2', title: 'New Registration', message: 'Staff member John joined the team.', time: '1h ago' },
+    { id: '2', title: 'New Registration', message: 'Staff member Vikram registered.', time: '1h ago' },
   ]);
   const [showNotifications, setShowNotifications]   = useState(false);
   const [showBookingsModal, setShowBookingsModal]   = useState(false);
@@ -45,19 +45,19 @@ const DashBoard = ({ setActiveTab }) => {
 
   // Modals Data
   const bookingsData = [
-    { id: 'BK-9921', user: 'John Doe', slot: 'Lot A-102', time: '09:30 AM', status: 'Confirmed' },
-    { id: 'BK-9922', user: 'Jane Smith', slot: 'Lot B-204', time: '10:15 AM', status: 'Pending' },
-    { id: 'BK-9923', user: 'Robert Johnson', slot: 'Lot A-105', time: '11:00 AM', status: 'Completed' },
-    { id: 'BK-9924', user: 'Emily Davis', slot: 'Lot C-302', time: '11:45 AM', status: 'Confirmed' },
-    { id: 'BK-9925', user: 'Michael Brown', slot: 'Lot B-108', time: '12:30 PM', status: 'Cancelled' },
+    { id: 'BK-9921', user: 'Aarav Sharma', slot: 'Lot A-102', time: '09:30 AM', status: 'Confirmed' },
+    { id: 'BK-9922', user: 'Priya Patel', slot: 'Lot B-204', time: '10:15 AM', status: 'Pending' },
+    { id: 'BK-9923', user: 'Rohan Verma', slot: 'Lot A-105', time: '11:00 AM', status: 'Completed' },
+    { id: 'BK-9924', user: 'Ananya Iyer', slot: 'Lot C-302', time: '11:45 AM', status: 'Confirmed' },
+    { id: 'BK-9925', user: 'Rahul Nair', slot: 'Lot B-108', time: '12:30 PM', status: 'Cancelled' },
   ];
 
   const usersData = [
-    { id: 'U-001', name: 'John Doe', email: 'john@example.com', bookings: 12, rating: '4.8' },
-    { id: 'U-002', name: 'Jane Smith', email: 'jane@example.com', bookings: 5, rating: '4.9' },
-    { id: 'U-003', name: 'Robert Johnson', email: 'robert@example.com', bookings: 21, rating: '4.5' },
-    { id: 'U-004', name: 'Emily Davis', email: 'emily@example.com', bookings: 8, rating: '4.7' },
-    { id: 'U-005', name: 'Marcus Chen', email: 'marcus@example.com', bookings: 14, rating: '5.0' },
+    { id: 'U-001', name: 'Aarav Sharma', email: 'aarav.sharma@gmail.com', bookings: 12, rating: '4.8' },
+    { id: 'U-002', name: 'Priya Patel', email: 'priya.patel@gmail.com', bookings: 5, rating: '4.9' },
+    { id: 'U-003', name: 'Rohan Verma', email: 'rohan.verma@gmail.com', bookings: 21, rating: '4.5' },
+    { id: 'U-004', name: 'Ananya Iyer', email: 'ananya.iyer@gmail.com', bookings: 8, rating: '4.7' },
+    { id: 'U-005', name: 'Vikram Patel', email: 'vikram.patel@gmail.com', bookings: 14, rating: '5.0' },
   ];
 
   const lotsData = [
@@ -70,29 +70,31 @@ const DashBoard = ({ setActiveTab }) => {
   const loadDashboardStats = async () => {
     try {
       const { supabase } = await import('../../../config/supabase');
-      
-      // Fetch locations count
-      const { data: locs } = await supabase.from('parking_locations').select('location_id');
-      const totalLots = locs ? locs.length : 1;
 
-      // Fetch slots summary
-      const { data: slots } = await supabase.from('parking_slots').select('slot_id, status');
+      // Fetch all 4 stats concurrently to reduce round-trip latency
+      const [locsRes, slotsRes, bksRes, pmtsRes] = await Promise.all([
+        supabase.from('parking_locations').select('location_id'),
+        supabase.from('parking_slots').select('slot_id, status'),
+        supabase.from('bookings').select('booking_id'),
+        supabase.from('payments').select('amount'),
+      ]);
+
+      const totalLots = locsRes.data ? locsRes.data.length : 1;
+
       let totalSlots = 0;
       let availableSlots = 0;
       let occupiedSlots = 0;
+      const slots = slotsRes.data;
       if (slots && slots.length > 0) {
         totalSlots = slots.length;
         availableSlots = slots.filter((s) => s.status === 'AVAILABLE').length;
         occupiedSlots = slots.filter((s) => s.status === 'OCCUPIED' || s.status === 'RESERVED').length;
       }
 
-      // Fetch bookings count
-      const { data: bks } = await supabase.from('bookings').select('booking_id');
-      const todaysBookings = bks ? bks.length : 0;
-
-      // Fetch payments revenue
-      const { data: pmts } = await supabase.from('payments').select('amount');
-      const todaysRevenue = pmts ? pmts.reduce((acc, p) => acc + Number(p.amount || 0), 0) : 0;
+      const todaysBookings = bksRes.data ? bksRes.data.length : 0;
+      const todaysRevenue = pmtsRes.data
+        ? pmtsRes.data.reduce((acc, p) => acc + Number(p.amount || 0), 0)
+        : 0;
 
       setDashStats({
         totalLots,
@@ -234,7 +236,7 @@ const DashBoard = ({ setActiveTab }) => {
           <TouchableOpacity style={styles.iconButton}>
             <FeatherIcon name="menu" size={24} color="#0F172A" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>ParkNow Admin</Text>
+          <Text style={styles.headerTitle}>SpotOn Admin</Text>
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity 

@@ -1,5 +1,5 @@
 {
-  "name": "parknow-admin-web",
+  "name": "spoton-admin-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.21"
   }
 }

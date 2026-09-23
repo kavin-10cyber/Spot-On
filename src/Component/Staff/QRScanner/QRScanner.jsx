@@ -18,8 +18,8 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Camera } from 'react-native-camera-kit';
-import VerifiedEntry from '../verifiedEntry/VerifiedEntry';
-import FailedVerification from '../failedVerifiction/FailedVerification';
+import VerifiedEntry from '../VerifiedEntry/VerifiedEntry';
+import FailedVerification from '../FailedVerification/FailedVerification';
 import { styles } from './QRScannerStyles';
 import { staffService } from '../../../services/staffService';
 
@@ -48,7 +48,7 @@ const QRScanner = ({ onBack, onCheckIn, onCheckOut, availableSlots, occupiedSlot
           PermissionsAndroid.PERMISSIONS.CAMERA,
           {
             title: 'Camera Permission',
-            message: 'ParkNow needs access to your camera to scan QR codes.',
+            message: 'SpotOn needs access to your camera to scan QR codes.',
             buttonNeutral: 'Ask Me Later',
             buttonNegative: 'Cancel',
             buttonPositive: 'OK',
@@ -205,7 +205,7 @@ const QRScanner = ({ onBack, onCheckIn, onCheckOut, availableSlots, occupiedSlot
           <Feather name="camera-off" size={64} color="#EF4444" style={{ marginBottom: 20 }} />
           <Text style={styles.permissionTitle}>Camera Permission Denied</Text>
           <Text style={styles.permissionSubtitle}>
-            ParkNow needs camera access to scan QR tickets and license plates. Please enable permissions in your device settings.
+            SpotOn needs camera access to scan QR tickets and license plates. Please enable permissions in your device settings.
           </Text>
           <TouchableOpacity style={styles.permissionBtn} onPress={requestCameraPermission}>
             <Text style={styles.permissionBtnText}>Try Again</Text>

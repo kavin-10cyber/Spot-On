@@ -160,14 +160,18 @@ const Search = ({ onBack, onViewMap, onParkingSelect }) => {
   // ── Fetch assigned parking locations from public.parking_locations ──────────
   const fetchLiveLocations = useCallback(async () => {
     try {
-      // 1. Get physical GPS user location
-      const userLoc = await locationService.getCurrentUserLocation();
+      // 1. Fetch user location and DB parking locations concurrently
+      const [userLocResult, resResult] = await Promise.allSettled([
+        locationService.getCurrentUserLocation(),
+        parkingService.getParkingLocations(),
+      ]);
+
+      const userLoc = userLocResult.status === 'fulfilled' ? userLocResult.value : null;
       const uLat = userLoc?.latitude || 11.4967;
       const uLng = userLoc?.longitude || 77.2764;
 
-      // 2. Fetch assigned DB parking locations
-      const res = await parkingService.getParkingLocations();
-      if (res.success && res.data && res.data.length > 0) {
+      const res = resResult.status === 'fulfilled' ? resResult.value : null;
+      if (res?.success && res?.data && res.data.length > 0) {
         const mapped = res.data.map((loc, idx) => {
           const spotLat = loc.latitude ? Number(loc.latitude) : uLat + (idx + 1) * 0.003;
           const spotLng = loc.longitude ? Number(loc.longitude) : uLng + (idx + 1) * 0.003;

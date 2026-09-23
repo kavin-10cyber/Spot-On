@@ -28,7 +28,7 @@ export default function App() {
 
   useEffect(() => {
     // 1. Check local session
-    const localSess = localStorage.getItem('parknow_admin_session');
+    const localSess = localStorage.getItem('spoton_admin_session');
     if (localSess) {
       setSession(JSON.parse(localSess));
     }
@@ -50,7 +50,7 @@ export default function App() {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0D1117', flexDirection: 'column', gap: 16 }}>
         <div style={{ fontSize: 48 }}>🅿</div>
-        <div style={{ color: '#fff', fontSize: 16, fontWeight: 700 }}>ParkNow Admin</div>
+        <div style={{ color: '#fff', fontSize: 16, fontWeight: 700 }}>SpotOn Admin</div>
         <div style={{ color: '#64748B', fontSize: 13 }}>Loading…</div>
       </div>
     );

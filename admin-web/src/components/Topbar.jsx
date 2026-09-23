@@ -13,7 +13,7 @@ const PAGE_META = {
 
 export default function Topbar() {
   const { pathname } = useLocation();
-  const meta = PAGE_META[pathname] || { title: 'ParkNow Admin', subtitle: '' };
+  const meta = PAGE_META[pathname] || { title: 'SpotOn Admin', subtitle: '' };
   const now = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
 
   return (

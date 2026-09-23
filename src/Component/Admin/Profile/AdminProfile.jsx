@@ -15,9 +15,9 @@ import { styles } from './AdminProfileStyles';
 
 const AdminProfile = ({ onLogout }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState('Sarah Connor');
-  const [email, setEmail] = useState('admin@parknow.com');
-  const [phone, setPhone] = useState('+1 (555) 0199');
+  const [name, setName] = useState('Rajesh Kumar');
+  const [email, setEmail] = useState('admin@spoton.in');
+  const [phone, setPhone] = useState('+91 98450 12345');
   const [role, setRole] = useState('Super Admin');
   const [shift, setShift] = useState('Morning (08:00 AM - 04:00 PM)');
 

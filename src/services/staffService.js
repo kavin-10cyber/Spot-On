@@ -77,6 +77,7 @@ export const staffService = {
       let isSuccess = true;
       let remarks = '';
       let failureReason = '';
+      let newStatus = '';
 
       if (booking.status === 'CANCELLED') {
         isSuccess = false;
@@ -182,7 +183,7 @@ export const staffService = {
   }) {
     try {
       // 1. Create a dummy or lookup guest user
-      const guestEmail = `guest_${Date.now()}@parknow.local`;
+      const guestEmail = `guest_${Date.now()}@spoton.local`;
       const { data: user } = await supabase
         .from('users')
         .insert([{ full_name: 'Walk-in Customer', email: guestEmail, phone: `${Date.now()}`, password_hash: 'manual', role_id: 4 }])

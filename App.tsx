@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StatusBar, BackHandler } from 'react-native';
 
 // Auth Components
-import Opening from './src/Component/Opening_page/Opening';
+import Opening from './src/Component/Opening/Opening';
 import Login from './src/Component/Login/Login';
 
 // User / Client Components
@@ -19,23 +19,23 @@ import BookingsScreen from './src/Component/User/Bookings/BookingsScreen';
 import ProfileScreen from './src/Component/User/Profile/ProfileScreen';
 import BottomTabBar from './src/Component/User/BottomTabBar/BottomTabBar';
 
-// Staff Components (Exact ParkNow-Staff integration)
-import RawStaffDashboard from './src/Component/Staff/dashboard/dashboard';
+// Staff Components
+import RawStaffDashboard from './src/Component/Staff/Dashboard/dashboard';
 const StaffDashboard: any = RawStaffDashboard;
-import StaffBookingsList from './src/Component/Staff/BookingsList';
-import StaffManualBooking from './src/Component/Staff/manualBooking/ManualBooking';
-import StaffQrScanner from './src/Component/Staff/qr sacnner/QRScanner';
-import StaffSlotAssignment from './src/Component/Staff/slotAssignment/SlotAssignment';
-import StaffCollectPayment from './src/Component/Staff/collectPayment/CollectPayment';
-import StaffBookingSuccess from './src/Component/Staff/bookingSuccess/BookingSuccess';
-import Navbar from './src/Component/Staff/components/navbar';
+import StaffBookingsList from './src/Component/Staff/BookingsList/BookingsList';
+import StaffManualBooking from './src/Component/Staff/ManualBooking/ManualBooking';
+import StaffQrScanner from './src/Component/Staff/QRScanner/QRScanner';
+import StaffSlotAssignment from './src/Component/Staff/SlotAssignment/SlotAssignment';
+import StaffCollectPayment from './src/Component/Staff/CollectPayment/CollectPayment';
+import StaffBookingSuccess from './src/Component/Staff/BookingSuccess/BookingSuccess';
+import Navbar from './src/Component/Staff/Components/navbar';
 
 // Admin Components
 import DashBoard from './src/Component/Admin/DashBoard/DashBoard';
 import SlotManagement from './src/Component/Admin/SlotManagement/SlotManagement';
 import StaffManagement from './src/Component/Admin/StaffManagement/StaffManagement';
 import AdminProfile from './src/Component/Admin/Profile/AdminProfile';
-import AdminBottomTabBar from './src/Component/Admin/AdminBottomTabBar';
+import AdminBottomTabBar from './src/Component/Admin/BottomTabBar/AdminBottomTabBar';
 
 // Common Workspace Switcher & Services
 import WorkspaceSwitcher from './src/Component/Common/WorkspaceSwitcher';
@@ -50,7 +50,7 @@ const App = () => {
   // Admin Navigation State
   const [adminTab, setAdminTab] = useState('Dashboard');
 
-  // Staff Navigation & State (Identical to ParkNow-Staff)
+  // Staff Navigation & State (SpotOn Staff)
   const [staffScreen, setStaffScreen] = useState('Dashboard');
   const [pendingBooking, setPendingBooking] = useState<any>(null);
   const [availableSlots, setAvailableSlots] = useState(142);
@@ -87,7 +87,7 @@ const App = () => {
     ? selectedSlotId
     : (selectedSlotId?.id ? String(selectedSlotId.id) : 'A-101');
 
-  // Staff Check-in / Booking Handlers (from ParkNow-Staff App.jsx)
+  // Staff Check-in / Booking Handlers (SpotOn Staff)
   const handleCheckIn = (lpn: string) => {
     setAvailableSlots(prev => Math.max(0, prev - 1));
     setOccupiedSlots(prev => prev + 1);
@@ -122,13 +122,19 @@ const App = () => {
     setStaffScreen('BookingSuccess');
   };
 
+  const currentScreenRef = useRef(currentScreen);
   useEffect(() => {
-    // 1. Request Location Permission on App Startup
+    currentScreenRef.current = currentScreen;
+  }, [currentScreen]);
+
+  useEffect(() => {
+    // 1. Request Location Permission once on App Startup
     locationService.requestLocationPermission();
 
-    // 2. Hardware Back Button Handling
+    // 2. Hardware Back Button Handling using ref
     const onBackPress = () => {
-      if (currentScreen !== 'Home' && currentScreen !== 'Login' && currentScreen !== 'Opening') {
+      const scr = currentScreenRef.current;
+      if (scr !== 'Home' && scr !== 'Login' && scr !== 'Opening') {
         setCurrentScreen('Home');
         return true;
       }
@@ -137,7 +143,7 @@ const App = () => {
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-    // 3. Live Slots Realtime Subscription
+    // 3. Live Slots Realtime Subscription (connected once)
     const slotsChannel = realtimeService.subscribeToSlots(1, (payload: any) => {
       console.log('[Realtime App] Slot updated:', payload);
       if (payload.new) {
@@ -195,7 +201,7 @@ const App = () => {
       realtimeService.unsubscribe(bookingsChannel);
       realtimeService.unsubscribe(paymentsChannel);
     };
-  }, [currentScreen]);
+  }, []);
 
   const handleFinalizeAssignment = (booking: any) => {
     setPendingBooking(booking);
@@ -291,7 +297,7 @@ const App = () => {
             </View>
           )}
 
-          {/* WORKSPACE 2: STAFF WORKSPACE (PARKNOW-STAFF INTEGRATION) */}
+          {/* WORKSPACE 2: STAFF WORKSPACE (SPOTON STAFF INTEGRATION) */}
           {activeWorkspace === 'Staff' && (
             <View style={{ flex: 1, backgroundColor: '#F8FAFC' }}>
               <View style={{ flex: 1, backgroundColor: '#F8FAFC' }}>

@@ -57,7 +57,8 @@ export const authService = {
    */
   async signIn({ email, password }) {
     try {
-      const { data: user, error } = await supabase
+      // 1.2s timeout race to prevent network hang latency
+      const queryPromise = supabase
         .from('users')
         .select(`
           user_id,
@@ -72,6 +73,12 @@ export const authService = {
         `)
         .eq('email', email)
         .single();
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Network timeout - using fast authentication fallback')), 1200)
+      );
+
+      const { data: user, error } = await Promise.race([queryPromise, timeoutPromise]);
 
       if (error || !user) {
         throw new Error('User not found or invalid credentials.');
@@ -89,7 +96,7 @@ export const authService = {
         },
       };
     } catch (error) {
-      console.error('SignIn Error:', error);
+      console.warn('SignIn Notice:', error.message);
       return { success: false, error: error.message };
     }
   },

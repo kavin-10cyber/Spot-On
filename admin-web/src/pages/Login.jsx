@@ -4,7 +4,7 @@ import { Car, AlertTriangle, LogIn, Lightbulb, Loader2, Lock } from 'lucide-reac
 import { supabase } from '../config/supabase';
 
 export default function Login() {
-  const [email, setEmail]       = useState('admin@parknow.com');
+  const [email, setEmail]       = useState('admin@spoton.in');
   const [password, setPassword] = useState('admin123');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
@@ -18,7 +18,7 @@ export default function Login() {
       // 1. Try Supabase Auth
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (!authError) {
-        localStorage.setItem('parknow_admin_session', JSON.stringify({ email, role: 'ADMIN' }));
+        localStorage.setItem('spoton_admin_session', JSON.stringify({ email, role: 'ADMIN' }));
         navigate('/');
         return;
       }
@@ -31,7 +31,7 @@ export default function Login() {
         .single();
 
       if (userData) {
-        localStorage.setItem('parknow_admin_session', JSON.stringify({ 
+        localStorage.setItem('spoton_admin_session', JSON.stringify({ 
           email: userData.email, 
           name: userData.full_name,
           role: userData.roles?.role_name || 'ADMIN' 
@@ -41,8 +41,8 @@ export default function Login() {
       }
 
       // 3. Demo fallback if user enters admin credentials
-      if (email === 'admin@parknow.com' || email.includes('admin')) {
-        localStorage.setItem('parknow_admin_session', JSON.stringify({ email, name: 'System Admin', role: 'ADMIN' }));
+      if (email === 'admin@spoton.in' || email.includes('admin')) {
+        localStorage.setItem('spoton_admin_session', JSON.stringify({ email, name: 'Rajesh Kumar (Admin)', role: 'ADMIN' }));
         navigate('/');
         return;
       }
@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   const fillDemoAdmin = () => {
-    setEmail('admin@parknow.com');
+    setEmail('admin@spoton.in');
     setPassword('admin123');
   };
 
@@ -67,7 +67,7 @@ export default function Login() {
           <div className="login-logo-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Car size={32} color="#FFFFFF" />
           </div>
-          <h1>ParkNow Admin</h1>
+          <h1>SpotOn Admin</h1>
           <p>Digital Parking Management System</p>
         </div>
 
@@ -85,7 +85,7 @@ export default function Login() {
               id="admin-email"
               type="email"
               className="form-input"
-              placeholder="admin@parknow.com"
+              placeholder="admin@spoton.in"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -153,13 +153,13 @@ export default function Login() {
               }}
             >
               <Lock size={12} />
-              Fill Demo Admin (admin@parknow.com)
+              Fill Demo Admin (admin@spoton.in)
             </button>
           </div>
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          Secured by Supabase Auth · ParkNow v1.0
+          Secured by Supabase Auth · SpotOn v1.0
         </p>
       </div>
     </div>

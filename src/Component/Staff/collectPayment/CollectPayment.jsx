@@ -15,9 +15,9 @@ import { styles } from './CollectPaymentStyles';
 const CollectPayment = ({ pendingBooking, onBack, onFinalizePayment }) => {
   const [selectedMethod, setSelectedMethod] = useState('UPI');
 
-  const customerName = pendingBooking?.name || 'Marcus Holloway';
+  const customerName = pendingBooking?.name || 'Aarav Sharma';
   const slotId = pendingBooking?.slotNum || 'A-12';
-  const vehicleLpn = pendingBooking?.lpn || 'ABC-1234';
+  const vehicleLpn = pendingBooking?.lpn || 'TN-38-AB-1234';
   const duration = pendingBooking?.time || '2 Hours';
 
   // Calculate amount based on duration hours

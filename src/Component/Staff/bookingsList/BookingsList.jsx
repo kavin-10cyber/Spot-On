@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Navbar from '../components/navbar';
+import Navbar from '../Components/navbar';
 import { styles } from './BookingsListStyles';
 import { supabase } from '../../../config/supabase';
 import { realtimeService } from '../../../services/realtimeService';
@@ -238,7 +238,7 @@ const BookingsList = ({ onNavigateToScreen }) => {
           <TouchableOpacity style={styles.menuBtn}>
             <Feather name="menu" size={24} color="#1E293B" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>ParkNow Staff</Text>
+          <Text style={styles.headerTitle}>SpotOn Staff</Text>
         </View>
         <Image
           source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120' }}

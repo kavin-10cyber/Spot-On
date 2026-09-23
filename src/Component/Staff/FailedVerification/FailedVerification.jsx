@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Navbar from '../components/navbar';
+import Navbar from '../Components/navbar';
 import { styles } from './FailedVerificationStyles';
 
 const FailedVerification = ({

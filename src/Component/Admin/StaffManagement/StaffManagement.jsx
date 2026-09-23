@@ -84,11 +84,11 @@ const StaffManagement = () => {
             rawId:        s.staff_id,
             userId:       s.user_id,
             name:         s.users?.full_name || 'Staff Member',
-            email:        s.users?.email || 'staff@parknow.com',
+            email:        s.users?.email || 'staff@spoton.in',
             role:         s.job_title || 'Gate Attendant',
             shift:        shiftLabel,
             rawShift:     s.shift || 'MORNING',
-            phone:        s.users?.phone || '+1 555-0100',
+            phone:        s.users?.phone || '+91 98765 43210',
             status:       s.employment_status || 'Active',
             locationId:   firstAssign?.location_id || 1,
             assignedLoc:  assignedLocName,
@@ -198,7 +198,7 @@ const StaffManagement = () => {
         }
       } else {
         // Step 1: Insert user
-        const generatedEmail = formEmail.trim() || `${formName.toLowerCase().replace(/\s+/g, '')}@parknow.com`;
+        const generatedEmail = formEmail.trim() || `${formName.toLowerCase().replace(/\s+/g, '')}@spoton.in`;
         const { data: newUser, error: errUser } = await supabase
           .from('users')
           .insert([
@@ -442,7 +442,7 @@ const StaffManagement = () => {
                 <Text style={styles.inputLabel}>Full Name</Text>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="e.g. John Doe"
+                  placeholder="e.g. Rajesh Kumar"
                   placeholderTextColor="#94A3B8"
                   value={formName}
                   onChangeText={setFormName}
@@ -508,7 +508,7 @@ const StaffManagement = () => {
                 <Text style={styles.inputLabel}>Contact Phone</Text>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="e.g. +1 555-0100"
+                  placeholder="e.g. +91 98765 43210"
                   placeholderTextColor="#94A3B8"
                   value={formPhone}
                   onChangeText={setFormPhone}

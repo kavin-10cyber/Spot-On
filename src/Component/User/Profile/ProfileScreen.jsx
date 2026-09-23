@@ -87,8 +87,8 @@ const ProfileScreen = ({ onLogout, onNavigateToBookings }) => {
               <FeatherIcon name="camera" size={14} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>Alex Johnson</Text>
-          <Text style={styles.userMeta}>Tesla Model 3 • ABC-1234</Text>
+          <Text style={styles.userName}>Aarav Sharma</Text>
+          <Text style={styles.userMeta}>Tata Nexon • TN-38-AB-1234</Text>
         </View>
 
         {/* Account Info Card */}
@@ -101,7 +101,7 @@ const ProfileScreen = ({ onLogout, onNavigateToBookings }) => {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Email</Text>
-              <Text style={styles.infoValue}>alex.johnson@example.com</Text>
+              <Text style={styles.infoValue}>aarav.sharma@gmail.com</Text>
             </View>
           </View>
 
@@ -111,7 +111,7 @@ const ProfileScreen = ({ onLogout, onNavigateToBookings }) => {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Phone</Text>
-              <Text style={styles.infoValue}>+1 (555) 000-1234</Text>
+              <Text style={styles.infoValue}>+91 98765 43210</Text>
             </View>
           </View>
         </View>
@@ -149,7 +149,7 @@ const ProfileScreen = ({ onLogout, onNavigateToBookings }) => {
         </View>
 
         {/* App Version Footer */}
-        <Text style={styles.appVersion}>PARKNOW v2.4.0 (PRO)</Text>
+        <Text style={styles.appVersion}>SPOTON v2.4.0 (PRO)</Text>
       </ScrollView>
     </SafeAreaView>
   );

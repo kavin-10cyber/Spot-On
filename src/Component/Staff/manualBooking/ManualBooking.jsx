@@ -13,7 +13,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Navbar from '../components/navbar';
+import Navbar from '../Components/navbar';
 import { styles } from './ManualBookingStyles';
 import { supabase } from '../../../config/supabase';
 
@@ -436,7 +436,7 @@ const ManualBooking = ({ onBack, onBookingSuccess, onNavigateToScanner, onNaviga
               <Feather name="user" size={18} color="#94A3B8" style={{ marginRight: 10 }} />
               <TextInput
                 style={styles.textInput}
-                placeholder="e.g. John Doe"
+                placeholder="e.g. Aarav Sharma"
                 placeholderTextColor="#94A3B8"
                 value={customerName}
                 onChangeText={setCustomerName}
@@ -451,7 +451,7 @@ const ManualBooking = ({ onBack, onBookingSuccess, onNavigateToScanner, onNaviga
               <Feather name="phone" size={18} color="#94A3B8" style={{ marginRight: 10 }} />
               <TextInput
                 style={styles.textInput}
-                placeholder="+1 (555) 000-0000"
+                placeholder="+91 98765 43210"
                 placeholderTextColor="#94A3B8"
                 keyboardType="phone-pad"
                 value={phoneNumber}

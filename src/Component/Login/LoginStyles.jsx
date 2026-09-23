@@ -3,355 +3,399 @@ import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
+  /* ── Root ── */
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#EEF2FF', // soft indigo-50 background
   },
   keyboardAvoidingView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-  },
-
-  /* ───── Banner ───── */
-  bannerContainer: {
-    width: '100%',
-    height: 220,
-    overflow: 'hidden',
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-  },
-  bannerGradient: {
-    flex: 1,
-    backgroundColor: '#0052cc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 16 : 50,
-    paddingBottom: 20,
-  },
-  backButton: {
-    position: 'absolute',
-    top: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 12 : 50,
-    left: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  backButtonText: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginTop: -2,
-  },
-  bannerBrand: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  bannerLogoIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 6,
-  },
-  bannerLogoP: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#0052cc',
-  },
-  bannerLogoText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  bannerImage: {
-    width: width * 0.65,
-    height: 100,
-    marginVertical: 4,
-  },
-  bannerOverlay: {
-    alignItems: 'flex-start',
-    width: '100%',
-    paddingHorizontal: 28,
-  },
-  bannerTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  bannerSubtitle: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: 2,
-  },
-
-  /* ───── Content ───── */
-  contentContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
     paddingBottom: 32,
   },
 
-  /* ───── Header / Logo ───── */
-  header: {
-    marginBottom: 20,
-  },
-  headerLogoRow: {
+  /* ── Top Nav ── */
+  topNav: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 28) + 8 : 16,
+    paddingBottom: 12,
+    backgroundColor: '#EEF2FF',
   },
-  logoIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: '#0052cc',
+  navBackButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4 },
+      android: { elevation: 2 },
+    }),
   },
-  logoP: {
-    fontSize: 16,
+  ecosystemPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    gap: 6,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4 },
+      android: { elevation: 2 },
+    }),
+  },
+  greenDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: '#22C55E',
+  },
+  ecosystemText: {
+    fontSize: 11,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: '#374151',
+    letterSpacing: 0.8,
   },
-  logoText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#0F172A',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#0F172A',
-    marginBottom: 6,
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#64748B',
-    lineHeight: 20,
-    fontWeight: '500',
+  helpButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4 },
+      android: { elevation: 2 },
+    }),
   },
 
-  /* ───── Role Selector ───── */
-  roleSelectorGroup: {
-    marginBottom: 20,
+  /* ── Hero Section ── */
+  heroSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 20,
+    gap: 14,
   },
-  roleSelectorRow: {
+  appIconContainer: {},
+  appIcon: {
+    width: 58,
+    height: 58,
+    borderRadius: 16,
+    backgroundColor: '#3B5BDB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: { shadowColor: '#3B5BDB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.35, shadowRadius: 10 },
+      android: { elevation: 6 },
+    }),
+  },
+  appIconText: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: -1,
+  },
+  heroText: {
+    flex: 1,
+  },
+  portalTitle: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#111827',
+    letterSpacing: -0.5,
+    lineHeight: 31,
+  },
+  portalSubtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    fontWeight: '500',
+    marginTop: 3,
+    lineHeight: 18,
+  },
+
+  /* ── Role Selector ── */
+  roleSectionContainer: {
+    marginHorizontal: 16,
+    marginBottom: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 14,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8 },
+      android: { elevation: 2 },
+    }),
+  },
+  roleLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  roleSectionLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#9CA3AF',
+    letterSpacing: 1,
+  },
+  accessBadge: {
+    backgroundColor: '#EEF2FF',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+  },
+  accessBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#3B5BDB',
+  },
+  roleTabsContainer: {
     flexDirection: 'row',
     gap: 8,
-    marginTop: 6,
   },
-  rolePill: {
+  roleTab: {
     flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    borderColor: '#E5E7EB',
+    gap: 5,
   },
-  rolePillActive: {
-    backgroundColor: '#EFF6FF',
-    borderColor: '#0052cc',
+  roleTabActive: {
+    backgroundColor: '#3B5BDB',
+    borderColor: '#3B5BDB',
+    ...Platform.select({
+      ios: { shadowColor: '#3B5BDB', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.3, shadowRadius: 6 },
+      android: { elevation: 4 },
+    }),
   },
-  rolePillText: {
-    fontSize: 13,
+  roleTabText: {
+    fontSize: 11,
     fontWeight: '700',
-    color: '#64748B',
-    marginLeft: 6,
+    color: '#6B7280',
+    textAlign: 'center',
   },
-  rolePillTextActive: {
-    color: '#0052cc',
+  roleTabTextActive: {
+    color: '#FFFFFF',
     fontWeight: '800',
   },
 
-  /* ───── Form ───── */
-  formContainer: {},
+  /* ── Form ── */
+  formContainer: {
+    marginHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8 },
+      android: { elevation: 2 },
+    }),
+  },
   inputGroup: {
     marginBottom: 16,
   },
-  label: {
+  inputLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#1E293B',
-    marginBottom: 6,
+    color: '#111827',
+    marginBottom: 7,
+  },
+  passwordLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 7,
+  },
+  forgotText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#3B5BDB',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
     borderRadius: 14,
-    paddingHorizontal: 14,
+    backgroundColor: '#F9FAFB',
+    paddingHorizontal: 13,
   },
   inputWrapperFocused: {
-    borderColor: '#0052cc',
+    borderColor: '#3B5BDB',
+    backgroundColor: '#FFFFFF',
     ...Platform.select({
-      ios: {
-        shadowColor: '#0052cc',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 2,
-      },
+      ios: { shadowColor: '#3B5BDB', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.12, shadowRadius: 6 },
+      android: { elevation: 2 },
     }),
   },
-  inputIconStyle: {
-    marginRight: 10,
+  inputIcon: {
+    marginRight: 9,
   },
   input: {
     flex: 1,
-    fontSize: 15,
-    color: '#0F172A',
+    fontSize: 14,
+    color: '#111827',
     fontWeight: '500',
-    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    paddingVertical: Platform.OS === 'ios' ? 13 : 10,
   },
-  eyeButton: {
-    padding: 6,
+  eyeBtn: {
+    padding: 5,
     marginLeft: 4,
   },
 
-  /* ───── Remember / Forgot ───── */
-  rememberForgotRow: {
+  /* ── Remember + SSL ── */
+  rememberRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
-    marginTop: 4,
+    marginBottom: 22,
+    marginTop: 2,
   },
-  rememberMeRow: {
+  rememberLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   checkbox: {
-    width: 18,
-    height: 18,
-    borderRadius: 4,
+    width: 19,
+    height: 19,
+    borderRadius: 5,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D5DB',
+    backgroundColor: '#F9FAFB',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
   },
   checkboxChecked: {
-    backgroundColor: '#0052cc',
-    borderColor: '#0052cc',
+    backgroundColor: '#3B5BDB',
+    borderColor: '#3B5BDB',
   },
-  checkmark: {
-    fontSize: 11,
-    color: '#FFFFFF',
-    fontWeight: '700',
-    marginTop: -1,
-  },
-  rememberMeText: {
+  rememberText: {
     fontSize: 13,
-    color: '#64748B',
+    color: '#4B5563',
     fontWeight: '500',
   },
-  forgotPasswordText: {
-    color: '#0052cc',
-    fontSize: 13,
+  sslBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#F0FDF4',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+  },
+  sslText: {
+    fontSize: 11,
     fontWeight: '700',
+    color: '#16A34A',
   },
 
-  /* ───── Login Button ───── */
+  /* ── Login Button ── */
   loginButton: {
-    backgroundColor: '#0052cc',
-    borderRadius: 20,
-    paddingVertical: 15,
+    backgroundColor: '#3B5BDB',
+    borderRadius: 16,
+    paddingVertical: 16,
     alignItems: 'center',
+    marginBottom: 22,
     ...Platform.select({
-      ios: {
-        shadowColor: '#0052cc',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-      },
-      android: {
-        elevation: 4,
-      },
+      ios: { shadowColor: '#3B5BDB', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.35, shadowRadius: 12 },
+      android: { elevation: 6 },
     }),
-    marginBottom: 24,
   },
   loginButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '800',
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
   },
 
-  /* ───── Divider ───── */
+  /* ── Divider ── */
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 18,
+    gap: 10,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: '#E5E7EB',
   },
   dividerText: {
-    marginHorizontal: 12,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '800',
-    color: '#94A3B8',
-    letterSpacing: 0.5,
+    color: '#9CA3AF',
+    letterSpacing: 0.8,
   },
 
-  /* ───── Google Button ───── */
-  googleButton: {
+  /* ── Social Buttons ── */
+  socialRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 20,
+  },
+  socialButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 20,
+    gap: 8,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 14,
     paddingVertical: 13,
-    marginBottom: 24,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
   },
-  googleIcon: {
-    fontSize: 18,
-    fontWeight: '700',
+  googleG: {
+    fontSize: 16,
+    fontWeight: '800',
     color: '#4285F4',
-    marginRight: 10,
   },
-  googleButtonText: {
-    fontSize: 14,
+  socialButtonText: {
+    fontSize: 13,
     fontWeight: '700',
-    color: '#1E293B',
+    color: '#111827',
   },
 
-  /* ───── Footer ───── */
-  footer: {
+  /* ── Info Box ── */
+  infoBox: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    backgroundColor: '#EEF2FF',
+    borderRadius: 14,
+    padding: 14,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
   },
-  footerText: {
-    color: '#64748B',
+  infoBoxIcon: {
+    marginTop: 2,
+  },
+  infoBoxText: {
     fontSize: 13,
+    color: '#374151',
     fontWeight: '500',
+    lineHeight: 18,
   },
-  registerText: {
-    color: '#0052cc',
+  infoBoxLink: {
     fontSize: 13,
-    fontWeight: '700',
+    color: '#3B5BDB',
+    fontWeight: '800',
+    marginTop: 3,
   },
 });

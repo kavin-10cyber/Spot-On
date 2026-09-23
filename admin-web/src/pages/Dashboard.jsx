@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   MapPin, 
   SquareParking, 
@@ -9,15 +9,49 @@ import {
   Inbox, 
   AlertTriangle, 
   ArrowDownLeft, 
-  ArrowUpRight 
+  ArrowUpRight,
+  TrendingUp,
 } from 'lucide-react';
 import { supabase } from '../config/supabase';
 
-const WEEKLY_DATA = [
-  { day: 'Mon', pct: 65 }, { day: 'Tue', pct: 78 }, { day: 'Wed', pct: 70 },
-  { day: 'Thu', pct: 85 }, { day: 'Fri', pct: 92 }, { day: 'Sat', pct: 88 },
-  { day: 'Sun', pct: 55 },
-];
+const CHART_DATASETS = {
+  occupancy: {
+    label: 'Occupancy %',
+    color1: '#6366F1',
+    color2: '#818CF8',
+    glow: 'rgba(99,102,241,0.35)',
+    unit: '%',
+    data: [
+      { day: 'Mon', val: 65 }, { day: 'Tue', val: 78 }, { day: 'Wed', val: 70 },
+      { day: 'Thu', val: 85 }, { day: 'Fri', val: 92 }, { day: 'Sat', val: 88 },
+      { day: 'Sun', val: 55 },
+    ],
+  },
+  revenue: {
+    label: 'Revenue (₹00s)',
+    color1: '#10B981',
+    color2: '#34D399',
+    glow: 'rgba(16,185,129,0.35)',
+    unit: '',
+    data: [
+      { day: 'Mon', val: 42 }, { day: 'Tue', val: 67 }, { day: 'Wed', val: 55 },
+      { day: 'Thu', val: 78 }, { day: 'Fri', val: 95 }, { day: 'Sat', val: 83 },
+      { day: 'Sun', val: 38 },
+    ],
+  },
+  bookings: {
+    label: 'Bookings',
+    color1: '#F59E0B',
+    color2: '#FCD34D',
+    glow: 'rgba(245,158,11,0.35)',
+    unit: '',
+    data: [
+      { day: 'Mon', val: 28 }, { day: 'Tue', val: 45 }, { day: 'Wed', val: 36 },
+      { day: 'Thu', val: 52 }, { day: 'Fri', val: 71 }, { day: 'Sat', val: 64 },
+      { day: 'Sun', val: 22 },
+    ],
+  },
+};
 
 const STAT_CARDS = (s) => [
   { label: 'Total Locations', value: s.totalLots,       icon: MapPin,        accent: '#0052cc', change: 'Active', changeCls: 'badge-blue' },
@@ -36,6 +70,9 @@ export default function Dashboard() {
   const [activity, setActivity]  = useState([]);
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingActivity, setLoadingActivity] = useState(true);
+  const [chartMode, setChartMode] = useState('occupancy');
+  const [hoveredBar, setHoveredBar] = useState(null);
+  const [animated, setAnimated] = useState(false);
 
   const fetchStats = async () => {
     try {
@@ -112,6 +149,8 @@ export default function Dashboard() {
   useEffect(() => {
     fetchStats();
     fetchActivity();
+    // Trigger bar entrance animation after a short delay
+    setTimeout(() => setAnimated(true), 100);
 
     // Real-time subscriptions
     const slotSub = supabase.channel('dashboard-slots')
@@ -124,9 +163,18 @@ export default function Dashboard() {
     return () => { supabase.removeChannel(slotSub); supabase.removeChannel(bkSub); };
   }, []);
 
+  const handleChartMode = (mode) => {
+    setAnimated(false);
+    setHoveredBar(null);
+    setChartMode(mode);
+    setTimeout(() => setAnimated(true), 80);
+  };
+
   const cards = STAT_CARDS(stats);
   const availPct = stats.totalSlots ? Math.round((stats.availableSlots / stats.totalSlots) * 100) : 0;
   const occupPct = stats.totalSlots ? Math.round((stats.occupiedSlots  / stats.totalSlots) * 100) : 0;
+  const activeDataset = CHART_DATASETS[chartMode];
+  const maxVal = Math.max(...activeDataset.data.map(d => d.val));
 
   return (
     <div className="page-body">
@@ -160,32 +208,199 @@ export default function Dashboard() {
           })}
         </div>
       )}
-
-      {/* Charts + Activity */}
+        {/* Charts + Activity */}
       <div className="dashboard-grid">
-        {/* Weekly Chart */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div className="card-header">
-            <div>
-              <div className="card-title">Weekly Slot Occupancy</div>
-              <div className="card-subtitle">Occupancy trend this week</div>
+
+        {/* ── Premium Weekly Chart ── */}
+        <div className="card premium-chart-card" style={{ marginBottom: 20 }}>
+          {/* Header */}
+          <div className="card-header" style={{ flexWrap: 'wrap', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 34, height: 34, borderRadius: 10,
+                background: `linear-gradient(135deg, ${activeDataset.color1}, ${activeDataset.color2})`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: `0 4px 12px ${activeDataset.glow}`,
+              }}>
+                <TrendingUp size={16} color="#fff" />
+              </div>
+              <div>
+                <div className="card-title">Weekly Performance</div>
+                <div className="card-subtitle">{activeDataset.label} — this week</div>
+              </div>
             </div>
-            <div className="donut-wrap" style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}>
-              <div className="donut-legend-item"><div className="donut-legend-dot" style={{ background: '#10B981' }} />Available {availPct}%</div>
-              <div className="donut-legend-item"><div className="donut-legend-dot" style={{ background: '#EF4444' }} />Occupied {occupPct}%</div>
+
+            {/* Dataset Toggle Tabs */}
+            <div style={{ display: 'flex', gap: 6, background: 'var(--bg)', borderRadius: 10, padding: 4, border: '1px solid var(--border)' }}>
+              {Object.entries(CHART_DATASETS).map(([key, ds]) => (
+                <button
+                  key={key}
+                  onClick={() => handleChartMode(key)}
+                  style={{
+                    padding: '5px 12px',
+                    borderRadius: 7,
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: 0.3,
+                    transition: 'all 0.2s',
+                    background: chartMode === key ? `linear-gradient(135deg, ${ds.color1}, ${ds.color2})` : 'transparent',
+                    color: chartMode === key ? '#fff' : 'var(--text-muted)',
+                    boxShadow: chartMode === key ? `0 2px 8px ${ds.glow}` : 'none',
+                  }}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
-          <div className="card-body">
-            <div className="chart-bars-row">
-              {WEEKLY_DATA.map(d => (
-                <div key={d.day} className="chart-col">
-                  <div className="bar-val">{d.pct}%</div>
-                  <div className="bar-track">
-                    <div className="bar-fill" style={{ height: `${d.pct}%` }} />
+
+          <div className="card-body" style={{ paddingTop: 8 }}>
+            {/* Chart Container */}
+            <div style={{ position: 'relative' }}>
+              {/* Horizontal Grid Lines */}
+              <div style={{ position: 'absolute', inset: '0 0 28px 0', pointerEvents: 'none' }}>
+                {[25, 50, 75, 100].map(pct => (
+                  <div key={pct} style={{
+                    position: 'absolute',
+                    bottom: `${pct}%`,
+                    left: 0, right: 0,
+                    height: 1,
+                    background: 'var(--border)',
+                    opacity: 0.6,
+                  }}>
+                    <span style={{
+                      position: 'absolute', left: -2, top: -8,
+                      fontSize: 9, color: 'var(--text-muted)', fontWeight: 600,
+                    }}>{Math.round(maxVal * pct / 100)}{activeDataset.unit}</span>
                   </div>
-                  <div className="bar-label">{d.day}</div>
+                ))}
+              </div>
+
+              {/* Bars */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                gap: 10,
+                height: 180,
+                paddingLeft: 28,
+                paddingBottom: 28,
+                position: 'relative',
+              }}>
+                {activeDataset.data.map((d, i) => {
+                  const heightPct = animated ? (d.val / maxVal) * 100 : 0;
+                  const isPeak    = d.val === maxVal;
+                  const isHovered = hoveredBar === i;
+
+                  return (
+                    <div
+                      key={d.day}
+                      style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, height: '100%', position: 'relative' }}
+                      onMouseEnter={() => setHoveredBar(i)}
+                      onMouseLeave={() => setHoveredBar(null)}
+                    >
+                      {/* Tooltip */}
+                      {isHovered && (
+                        <div style={{
+                          position: 'absolute',
+                          top: -44,
+                          background: '#1E293B',
+                          color: '#fff',
+                          fontSize: 12,
+                          fontWeight: 700,
+                          padding: '5px 10px',
+                          borderRadius: 8,
+                          whiteSpace: 'nowrap',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                          zIndex: 10,
+                          pointerEvents: 'none',
+                        }}>
+                          {d.day}: {d.val}{activeDataset.unit}
+                          <div style={{
+                            position: 'absolute', bottom: -5, left: '50%', transform: 'translateX(-50%)',
+                            width: 0, height: 0,
+                            borderLeft: '5px solid transparent', borderRight: '5px solid transparent',
+                            borderTop: '5px solid #1E293B',
+                          }} />
+                        </div>
+                      )}
+
+                      {/* Bar Track */}
+                      <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'flex-end', position: 'relative' }}>
+                        {/* Bar Fill */}
+                        <div style={{
+                          width: '100%',
+                          height: `${heightPct}%`,
+                          background: `linear-gradient(to top, ${activeDataset.color1}, ${activeDataset.color2})`,
+                          borderRadius: '6px 6px 3px 3px',
+                          transition: `height 0.7s cubic-bezier(0.34,1.56,0.64,1) ${i * 60}ms`,
+                          position: 'relative',
+                          boxShadow: isHovered ? `0 0 16px ${activeDataset.glow}` : `0 2px 8px ${activeDataset.glow}`,
+                          opacity: isHovered ? 1 : 0.85,
+                          cursor: 'pointer',
+                        }}>
+                          {/* Glow cap on top */}
+                          <div style={{
+                            position: 'absolute',
+                            top: 0, left: 0, right: 0,
+                            height: 6,
+                            background: activeDataset.color2,
+                            borderRadius: '6px 6px 0 0',
+                            opacity: 0.9,
+                          }} />
+                          {/* Peak star badge */}
+                          {isPeak && (
+                            <div style={{
+                              position: 'absolute',
+                              top: -22,
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                              background: activeDataset.color1,
+                              color: '#fff',
+                              fontSize: 9,
+                              fontWeight: 800,
+                              padding: '2px 6px',
+                              borderRadius: 20,
+                              whiteSpace: 'nowrap',
+                              letterSpacing: 0.5,
+                              boxShadow: `0 2px 6px ${activeDataset.glow}`,
+                            }}>
+                              ★ PEAK
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Day Label */}
+                      <div style={{
+                        fontSize: 11, fontWeight: 700,
+                        color: isPeak ? activeDataset.color1 : 'var(--text-muted)',
+                        transition: 'color 0.3s',
+                      }}>
+                        {d.day}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Footer Legend */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', gap: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: 3, background: '#10B981' }} />
+                  Available {availPct}%
                 </div>
-              ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: 3, background: '#EF4444' }} />
+                  Occupied {occupPct}%
+                </div>
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
+                Peak: {maxVal}{activeDataset.unit} on {activeDataset.data.find(d => d.val === maxVal)?.day}
+              </div>
             </div>
           </div>
         </div>

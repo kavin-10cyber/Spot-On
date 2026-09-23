@@ -51,7 +51,7 @@ const Payment = ({ parking, slotId, selectedSlot, bookingDetails, onBack, onPayS
     },
     {
       id: 'wallet',
-      title: 'ParkNow Wallet',
+      title: 'SpotOn Wallet',
       subtitle: 'Balance: ₹2,450.00',
       icon: 'pocket',
     },

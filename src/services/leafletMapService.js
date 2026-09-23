@@ -1,5 +1,5 @@
 /**
- * ParkNow Leaflet Map Engine
+ * SpotOn Leaflet Map Engine
  * Generates interactive OpenStreetMap HTML for Home Dashboard and Navigation screens.
  * Uses base href & robust unpkg/cdnjs fallback URLs + mixed-content compatibility.
  */
